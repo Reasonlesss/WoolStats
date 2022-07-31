@@ -26,6 +26,12 @@ shadowJar {
     archiveFileName = "WoolStats.jar"
 }
 
+jar {
+    manifest {
+        attributes 'Main-Class': 'codes.reason.wool.Main'
+    }
+}
+
 build {
     dependsOn shadowJar
 }
