@@ -36,4 +36,4 @@ jobs:
         run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
       - name: Add a hi to a text file. (to test if this works)
-        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} echo does this work >> test.txt
+        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo does this work >> test.txt"
