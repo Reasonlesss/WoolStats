@@ -7,8 +7,6 @@ import codes.reason.wool.command.impl.LeaderboardCommand;
 import codes.reason.wool.listener.CommandListener;
 import codes.reason.wool.command.impl.StatsCommand;
 import codes.reason.wool.listener.SelectMenuListener;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Activity;
 
@@ -34,8 +32,6 @@ public class WoolStats {
 
     private final CommandManager commandManager;
 
-    private final MongoClient client;
-
     private final JDA jda;
 
     public WoolStats(JDA jda) {
@@ -51,17 +47,11 @@ public class WoolStats {
         this.commandManager = new CommandManager(jda);
         this.commandManager.register(new StatsCommand(), new LeaderboardCommand(), new GraphsCommand(), new BotStatsCommand());
 
-        this.client = MongoClients.create("mongodb://127.0.0.1:27017");
-
         jda.addEventListener(new CommandListener(), new SelectMenuListener());
     }
 
     public CommandManager getCommandManager() {
         return commandManager;
-    }
-
-    public MongoClient getMongoClient() {
-        return client;
     }
 
     public ExecutorService getExecutorService() {

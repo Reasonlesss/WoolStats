@@ -16,6 +16,10 @@ public class MongoHandler {
         this.client = MongoClients.create("mongodb://127.0.0.1:27017");
     }
 
+    public MongoClient getClient() {
+        return client;
+    }
+
     public CompletableFuture<FindIterable<Document>> getDocuments(String collectionName, String key, Object value) {
         CompletableFuture<FindIterable<Document>> future = new CompletableFuture<>();
         WoolData.EXECUTOR_SERVICE.submit(() -> {

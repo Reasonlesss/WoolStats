@@ -2,9 +2,9 @@ package codes.reason.wool.command.impl;
 
 import codes.reason.wool.WoolStats;
 import codes.reason.wool.command.Command;
+import codes.reason.wool.database.analytics.AnalyticsHandler;
 import codes.reason.wool.embed.impl.BotStatsEmbed;
 import codes.reason.wool.util.EmbedUtil;
-import codes.reason.wool.util.MongoHelper;
 import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
@@ -34,8 +34,8 @@ public class BotStatsCommand implements Command {
         event.deferReply().queue();
 
         String[] commandList = WoolStats.INSTANCE.getCommandManager().getCommandList().toArray(new String[]{});
-        MongoHelper.getCommandStats(commandList).thenAccept(commandStats -> {
-            MongoHelper.getDailyStats().thenAccept(dailyStats -> {
+        AnalyticsHandler.getCommandStats(commandList).thenAccept(commandStats -> {
+            AnalyticsHandler.getDailyStats().thenAccept(dailyStats -> {
 
                 BotStatsEmbed botStatsEmbed = new BotStatsEmbed(commandStats, dailyStats);
 

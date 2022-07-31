@@ -1,6 +1,6 @@
-package codes.reason.wool.util;
+package codes.reason.wool.database.analytics;
 
-import codes.reason.wool.WoolStats;
+import codes.reason.wool.database.WoolData;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
@@ -16,14 +16,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-public class MongoHelper {
+public class AnalyticsHandler {
+
+    public static void incrementCommandStat(String command) {
+        WoolData.EXECUTOR_SERVICE.submit(() -> {
+            MongoClient mongoClient = WoolData.MONGO_HANDLER.getClient();
+            MongoDatabase database = mongoClient.getDatabase("test");
+            MongoCollection<Document> commandStats = database.getCollection("commands");
+
+            commandStats.findOneAndUpdate(Filters.eq("name", command),
+                    new Document("$inc", new Document("times_ran", 1)),
+                    new FindOneAndUpdateOptions().upsert(true));
+        });
+    }
 
     public static CompletableFuture<Map<String, Integer>> getCommandStats(String... commands) {
         CompletableFuture<Map<String, Integer>> future = new CompletableFuture<>();
-        WoolStats.INSTANCE.getExecutorService().submit(() -> {
-            MongoClient mongoClient = WoolStats.INSTANCE.getMongoClient();
-            MongoDatabase database = mongoClient.getDatabase("test");
+        WoolData.EXECUTOR_SERVICE.submit(() -> {
+            MongoDatabase database = WoolData.MONGO_HANDLER.getClient().getDatabase("test");
             MongoCollection<Document> commandStats = database.getCollection("commands");
+
+
 
             Map<String, Integer> stats = new HashMap<>();
             int total = 0;
@@ -43,26 +56,11 @@ public class MongoHelper {
         return future;
     }
 
-
-    public static void incrementCommandStat(String command) {
-        WoolStats.INSTANCE.getExecutorService().submit(() -> {
-            MongoClient mongoClient = WoolStats.INSTANCE.getMongoClient();
-            MongoDatabase database = mongoClient.getDatabase("test");
-            MongoCollection<Document> commandStats = database.getCollection("commands");
-
-            commandStats.findOneAndUpdate(Filters.eq("name", command),
-                    new Document("$inc", new Document("times_ran", 1)),
-                    new FindOneAndUpdateOptions().upsert(true));
-
-            updateDailyStats();
-        });
-    }
-
     private static final long DAY = 86400000L;
 
-    public static void updateDailyStats() {
-        WoolStats.INSTANCE.getExecutorService().submit(() -> {
-            MongoClient mongoClient = WoolStats.INSTANCE.getMongoClient();
+    public static void updateDailyStats(int guilds, String... commands) {
+        WoolData.EXECUTOR_SERVICE.submit(() -> {
+            MongoClient mongoClient = WoolData.MONGO_HANDLER.getClient();
             MongoDatabase database = mongoClient.getDatabase("test");
             MongoCollection<Document> dailyStats = database.getCollection("daily_stats");
 
@@ -74,23 +72,20 @@ public class MongoHelper {
                 }
             }
 
-            String[] commands = WoolStats.INSTANCE.getCommandManager().getCommandList().toArray(new String[]{});
-
             getCommandStats(commands).thenAccept(stats -> {
                 dailyStats.insertOne(new Document("timestamp", System.currentTimeMillis())
-                        .append("guilds", WoolStats.INSTANCE.getGuilds())
+                        .append("guilds", guilds)
                         .append("commands", stats.get("total")));
             });
         });
 
     }
 
-    // change this
     public static CompletableFuture<List<Map<String, Integer>>> getDailyStats() {
         CompletableFuture<List<Map<String, Integer>>> future = new CompletableFuture<>();
 
-        WoolStats.INSTANCE.getExecutorService().submit(() -> {
-            MongoClient mongoClient = WoolStats.INSTANCE.getMongoClient();
+        WoolData.EXECUTOR_SERVICE.submit(() -> {
+            MongoClient mongoClient = WoolData.MONGO_HANDLER.getClient();
             MongoDatabase database = mongoClient.getDatabase("test");
             MongoCollection<Document> dailyStats = database.getCollection("daily_stats");
 
@@ -110,5 +105,8 @@ public class MongoHelper {
 
         return future;
     }
+
+
+
 
 }
