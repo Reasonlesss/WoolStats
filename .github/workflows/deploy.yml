@@ -7,6 +7,7 @@ on:
 
 jobs:
   build:
+    name: Build and Deploy
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -19,13 +20,6 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-
       - name: Install SSH Key
         uses: shimataro/ssh-key-action@v2
         with:
@@ -35,5 +29,5 @@ jobs:
       - name: Adding the Known Host
         run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Even more debugging
-        run: ls
+      - name: Upload File
+        run: rsync ./build/libs/WoolStats.jar ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/WoolStats/WoolStats.jar
