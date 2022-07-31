@@ -1,0 +1,20 @@
+plugins {
+    id 'java'
+}
+
+group 'codes.reason'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    maven {
+        url 'https://repo.hypixel.net/repository/Hypixel/'
+    }
+}
+
+dependencies {
+    implementation 'org.mongodb:mongodb-driver-sync:4.6.0'
+    implementation 'net.hypixel:hypixel-api-transport-apache:4.2'
+    implementation project(':woolwarsapi')
+    implementation project(':common')
+}

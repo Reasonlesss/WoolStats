@@ -1,0 +1,5 @@
+rootProject.name = 'WoolStatsBot'
+include 'api'
+include 'woolwarsapi'
+include 'common'
+include 'database'
