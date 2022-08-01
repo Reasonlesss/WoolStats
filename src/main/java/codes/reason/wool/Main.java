@@ -28,7 +28,7 @@ public class Main {
 //        if (true) return;
 
         if (args.length == 0) {
-            System.err.println("[ERR] No token was provided!");
+            System.err.println("[ERR] No token was provided!!!");
             System.exit(0);
         }
 

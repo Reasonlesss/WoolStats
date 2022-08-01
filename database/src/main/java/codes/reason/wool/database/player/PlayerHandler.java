@@ -45,16 +45,17 @@ public class PlayerHandler {
     public static CompletableFuture<Player> getPlayer(UUID uuid) {
         CompletableFuture<Player> future = new CompletableFuture<>();
 
-        WoolData.MONGO_HANDLER.getSingleDocument("player_data", "uuid", String.valueOf(uuid))
-                .thenAccept(document -> {
-                    if (document == null ||
-                        System.currentTimeMillis() > document.getLong("lastUpdated") + CACHE_TIME) {
-                        fetchUpToDatePlayer(uuid).thenAccept(future::complete);
-                        return;
-                    }
+        WoolData.EXECUTOR_SERVICE.submit(() -> {
+            Document document = WoolData.MONGO_HANDLER.getSingleDocument("player_data", "uuid", String.valueOf(uuid));
+            if (document == null ||
+                    System.currentTimeMillis() > document.getLong("lastUpdated") + CACHE_TIME) {
+                fetchUpToDatePlayer(uuid).thenAccept(future::complete);
+            }else {
+                future.complete(PlayerSerializer.INSTANCE.fromDocument(document));
+            }
+        });
 
-                    future.complete(PlayerSerializer.INSTANCE.fromDocument(document));
-                });
+
         return future;
     }
 

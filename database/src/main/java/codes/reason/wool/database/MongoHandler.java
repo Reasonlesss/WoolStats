@@ -5,6 +5,7 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.UpdateOptions;
 import org.bson.Document;
 
+import javax.print.Doc;
 import java.util.concurrent.CompletableFuture;
 
 public class MongoHandler {
@@ -20,33 +21,17 @@ public class MongoHandler {
         return client;
     }
 
-    public CompletableFuture<FindIterable<Document>> getDocuments(String collectionName, String key, Object value) {
-        CompletableFuture<FindIterable<Document>> future = new CompletableFuture<>();
-        WoolData.EXECUTOR_SERVICE.submit(() -> {
-            try {
-                MongoDatabase mongoDatabase = this.client.getDatabase("test");
-                MongoCollection<Document> collection = mongoDatabase.getCollection(collectionName);
-
-                future.complete(collection.find(Filters.eq(key, value)));
-            }catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-        return future;
+    public FindIterable<Document> getDocuments(String collectionName, String key, Object value) {
+        MongoDatabase mongoDatabase = this.client.getDatabase("test");
+        MongoCollection<Document> collection = mongoDatabase.getCollection(collectionName);
+        return collection.find(Filters.eq(key, value));
     }
 
-    public CompletableFuture<Document> getSingleDocument(String collectionName, String key, Object value) {
-        CompletableFuture<Document> future = new CompletableFuture<>();
-        getDocuments(collectionName, key, value).thenAccept(iterable -> {
-            try(MongoCursor<Document> iterator = iterable.limit(1).iterator()) {
-                if (iterator.hasNext()) {
-                    future.complete(iterator.next());
-                } else {
-                    future.complete(null);
-                }
-            }
-        });
-        return future;
+    public Document getSingleDocument(String collectionName, String key, Object value) {
+        try (MongoCursor<Document> it = getDocuments(collectionName, key, value).limit(1).iterator()) {
+            if (it.hasNext()) return it.next();
+        }
+        return null;
     }
 
     public void updateOrInsertDocument(String collectionName, String key, Object value, Document document) {
