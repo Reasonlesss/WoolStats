@@ -34,6 +34,8 @@ public class WoolStats {
 
     private final JDA jda;
 
+    public static final boolean DEVELOPER_MODE = System.getenv("DEV") != null;
+
     public WoolStats(JDA jda) {
         INSTANCE = this;
 
