@@ -69,7 +69,7 @@ public class StatsCommand implements Command {
                     .build();
 
             EmbedUtil.prepareEmbed(event.getHook(), embed, response.getCacheTime())
-                    .thenAccept(action -> action.setActionRow(selectMenu).queue());
+                    .thenAccept(action -> action.setActionRow(selectMenu).setContent("testing deployment").queue());
 
         }).exceptionally(e -> {
             event.getHook().editOriginalEmbeds(EmbedUtil.createError(e.getCause())).queue();
