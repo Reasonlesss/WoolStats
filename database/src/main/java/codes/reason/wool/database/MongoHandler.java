@@ -25,7 +25,7 @@ public class MongoHandler {
         MongoClientSettings.Builder settings = MongoClientSettings.builder()
                 .applyConnectionString(new ConnectionString(System.getenv("MONGO_URL")));
 
-        if (!System.getenv("DEV").equals("true")) {
+        if (System.getenv("DEV") != null) {
             MongoCredential credential = MongoCredential.createCredential(
                     System.getenv("MONGO_USERNAME"),
                     this.database,
