@@ -20,8 +20,7 @@ public class AnalyticsHandler {
 
     public static void incrementCommandStat(String command) {
         WoolData.EXECUTOR_SERVICE.submit(() -> {
-            MongoClient mongoClient = WoolData.MONGO_HANDLER.getClient();
-            MongoDatabase database = mongoClient.getDatabase("test");
+            MongoDatabase database = WoolData.MONGO_HANDLER.getDatabase();
             MongoCollection<Document> commandStats = database.getCollection("commands");
 
             commandStats.findOneAndUpdate(Filters.eq("name", command),
@@ -33,7 +32,7 @@ public class AnalyticsHandler {
     public static CompletableFuture<Map<String, Integer>> getCommandStats(String... commands) {
         CompletableFuture<Map<String, Integer>> future = new CompletableFuture<>();
         WoolData.EXECUTOR_SERVICE.submit(() -> {
-            MongoDatabase database = WoolData.MONGO_HANDLER.getClient().getDatabase("test");
+            MongoDatabase database = WoolData.MONGO_HANDLER.getDatabase();
             MongoCollection<Document> commandStats = database.getCollection("commands");
 
 
@@ -60,8 +59,7 @@ public class AnalyticsHandler {
 
     public static void updateDailyStats(int guilds, String... commands) {
         WoolData.EXECUTOR_SERVICE.submit(() -> {
-            MongoClient mongoClient = WoolData.MONGO_HANDLER.getClient();
-            MongoDatabase database = mongoClient.getDatabase("test");
+            MongoDatabase database = WoolData.MONGO_HANDLER.getDatabase();
             MongoCollection<Document> dailyStats = database.getCollection("daily_stats");
 
             Document document = dailyStats.find().limit(1).sort(new Document("$natural", -1)).first();
@@ -85,8 +83,7 @@ public class AnalyticsHandler {
         CompletableFuture<List<Map<String, Integer>>> future = new CompletableFuture<>();
 
         WoolData.EXECUTOR_SERVICE.submit(() -> {
-            MongoClient mongoClient = WoolData.MONGO_HANDLER.getClient();
-            MongoDatabase database = mongoClient.getDatabase("test");
+            MongoDatabase database = WoolData.MONGO_HANDLER.getDatabase();
             MongoCollection<Document> dailyStats = database.getCollection("daily_stats");
 
             FindIterable<Document> documents = dailyStats.find()

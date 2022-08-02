@@ -14,12 +14,12 @@ public class WoolData {
 
     public static final ExecutorService EXECUTOR_SERVICE = Executors.newFixedThreadPool(15);
 
-    public static MongoHandler MONGO_HANDLER = new MongoHandler("");
+    public static MongoHandler MONGO_HANDLER = new MongoHandler();
     public static Gson GSON = new GsonBuilder().create();
     public static HypixelAPI HYPIXEL_API;
 
     static {
-        HypixelHttpClient client = new ApacheHttpClient(UUID.fromString("d6192a62-5ce7-40ec-bb30-851906c57b5c"));
+        HypixelHttpClient client = new ApacheHttpClient(UUID.fromString(System.getenv("HYPIXEL_API")));
         HYPIXEL_API = new HypixelAPI(client);
     }
 

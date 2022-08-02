@@ -27,13 +27,8 @@ public class Main {
 //        System.exit(0);
 //        if (true) return;
 
-        if (args.length == 0) {
-            System.err.println("[ERR] No token was provided!!!");
-            System.exit(0);
-        }
-
         try {
-            JDA jda = JDABuilder.createLight(args[0])
+            JDA jda = JDABuilder.createLight(System.getenv("BOT_TOKEN"))
                     .build();
 
             new WoolStats(jda);

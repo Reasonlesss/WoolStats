@@ -31,3 +31,6 @@ jobs:
 
       - name: Upload File
         run: rsync ./build/libs/WoolStats.jar ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/WoolStats/WoolStats.jar
+
+      - name: Restart the Bot
+        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "sudo systemctl restart woolstats"
