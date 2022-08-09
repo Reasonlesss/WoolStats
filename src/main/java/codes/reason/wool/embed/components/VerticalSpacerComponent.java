@@ -9,6 +9,6 @@ public class VerticalSpacerComponent implements Component {
 
     @Override
     public BufferedImage render() {
-        return ImageHelper.createImage(1, 5);
+        return ImageHelper.createImage(1, 6);
     }
 }
