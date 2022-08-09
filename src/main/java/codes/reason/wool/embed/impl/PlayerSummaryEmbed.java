@@ -57,7 +57,7 @@ public class PlayerSummaryEmbed extends Embed {
                         new TextComponent(MinecraftFont.MEDIUM, new TextPart(playtime, TextColor.GREEN)),
                         new VerticalSpacerComponent(),
 
-                        new TextComponent(MinecraftFont.SMALL, new TextPart("Gamed Played", TextColor.GRAY)),
+                        new TextComponent(MinecraftFont.SMALL, new TextPart("Games Played", TextColor.GRAY)),
                         new TextComponent(MinecraftFont.MEDIUM, new TextPart(NumberFormatter.shortenNumber(played), TextColor.YELLOW))
 
 
