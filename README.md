@@ -7,7 +7,6 @@
 > :warning: This project is not being maintained anymore. I may return to this eventually.
 
 ## Showcase
-
 Here is a showcase of a few of the embeds the bot can generate.
 <img src="https://github.com/Reasonlesss/WoolStats/blob/main/.github/showcase/showcase1.png?raw=true" />
 <img src="https://github.com/Reasonlesss/WoolStats/blob/main/.github/showcase/showcase2.png?raw=true" />
