@@ -49,6 +49,7 @@ public class AnalyticsHandler {
 
             int total = 0;
             for (String key : document.keySet()) {
+                if (key.equals("_id")) continue;
                 int amount = document.getInteger(key, 0);
                 stats.put(key, amount);
                 total += amount;
