@@ -23,21 +23,12 @@ public class StatisticsSerializer implements Serializer<Map<StatisticCategory, S
                 for (StatisticType type : StatisticType.values()) {
                     if (categoryDoc.containsKey(type.toString())) {
                         Document statDocument = categoryDoc.get(type.toString(), Document.class);
-                        if (statDocument.get("value") instanceof Long longValue) {
+                        if (statDocument.get("value") instanceof Number value) {
                             statisticMap.put(type, new Statistics.Statistic(
-                                    longValue,
+                                    value,
                                     statDocument.getInteger("position")
                             ));
                         }
-
-                        if (statDocument.get("value") instanceof Double doubleValue) {
-                            statisticMap.put(type, new Statistics.Statistic(
-                                    doubleValue,
-                                    statDocument.getInteger("position")
-                            ));
-                        }
-
-
                     }
                 }
 

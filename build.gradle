@@ -1,36 +1,17 @@
 plugins {
     id 'java'
-    id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
-group 'codes.reason'
-version '1.0-SNAPSHOT'
+subprojects {
+    group 'codes.reason'
+    version '1.0-SNAPSHOT'
 
-repositories {
-    mavenCentral()
-    maven {
-        url 'https://repo.hypixel.net/repository/Hypixel/'
+    apply plugin: 'java'
+
+    repositories {
+        mavenCentral()
+        maven {
+            url 'https://repo.hypixel.net/repository/Hypixel/'
+        }
     }
-}
-
-dependencies {
-    implementation 'net.dv8tion:JDA:5.0.0-alpha.12'
-    implementation 'com.google.code.gson:gson:2.9.0'
-
-    implementation project(':database')
-    implementation project(':woolwarsapi')
-}
-
-shadowJar {
-    archiveFileName = "WoolStats.jar"
-}
-
-jar {
-    manifest {
-        attributes 'Main-Class': 'codes.reason.wool.Main'
-    }
-}
-
-build {
-    dependsOn shadowJar
 }

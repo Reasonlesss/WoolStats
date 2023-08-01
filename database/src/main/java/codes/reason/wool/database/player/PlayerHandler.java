@@ -2,20 +2,28 @@ package codes.reason.wool.database.player;
 
 import codes.reason.wool.api.WoolWarsAPI;
 import codes.reason.wool.api.response.PlayerResponse;
-import codes.reason.wool.api.statistics.GeneralInfo;
 import codes.reason.wool.api.statistics.StatisticCategory;
 import codes.reason.wool.api.statistics.StatisticType;
+import codes.reason.wool.common.Common;
 import codes.reason.wool.common.TextColor;
 import codes.reason.wool.common.WebUtil;
 import codes.reason.wool.database.WoolData;
 import codes.reason.wool.database.serializers.PlayerSerializer;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.ReplaceOptions;
 import net.hypixel.api.reply.PlayerReply;
 import org.bson.Document;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public class PlayerHandler {
@@ -28,7 +36,7 @@ public class PlayerHandler {
     public static CompletableFuture<Player> getPlayer(String name) {
         CompletableFuture<Player> future = new CompletableFuture<>();
 
-        WoolData.EXECUTOR_SERVICE.submit(() -> {
+        Common.EXECUTOR_SERVICE.submit(() -> {
             try {
                 String content = WebUtil.getContent("https://playerdb.co/api/player/minecraft/" + name);
                 getPlayer(UUID.fromString(JsonParser.parseString(content).getAsJsonObject().getAsJsonObject("data")
@@ -45,8 +53,11 @@ public class PlayerHandler {
     public static CompletableFuture<Player> getPlayer(UUID uuid) {
         CompletableFuture<Player> future = new CompletableFuture<>();
 
-        WoolData.EXECUTOR_SERVICE.submit(() -> {
-            Document document = WoolData.MONGO_HANDLER.getSingleDocument("player_data", "uuid", String.valueOf(uuid));
+        Common.EXECUTOR_SERVICE.submit(() -> {
+            Document document = WoolData.MONGO_HANDLER.getDatabase()
+                    .getCollection("player_data")
+                    .find(Filters.eq("uuid", String.valueOf(uuid)))
+                    .first();
             if (document == null ||
                     System.currentTimeMillis() > document.getLong("lastUpdated") + CACHE_TIME) {
                 fetchUpToDatePlayer(uuid).thenAccept(future::complete);
@@ -59,14 +70,18 @@ public class PlayerHandler {
         return future;
     }
 
+    public static void savePlayer(Player player) {
+        Document document = PlayerSerializer.INSTANCE.toDocument(player);
+        String uuid = String.valueOf(player.getUuid());
+        WoolData.MONGO_HANDLER.getDatabase()
+                .getCollection("player_data")
+                .replaceOne(Filters.eq("uuid", uuid), document, new ReplaceOptions().upsert(true));
+    }
+
     private static CompletableFuture<Player> fetchUpToDatePlayer(UUID uuid) {
         CompletableFuture<Player> future = new CompletableFuture<>();
         WoolWarsAPI.getPlayer(uuid).thenAccept(response -> {
             WoolData.HYPIXEL_API.getPlayerByUuid(uuid).thenAccept(hypixelReply -> {
-                GeneralInfo generalInfo = response.getGeneralInfo();
-
-
-
                 Player player = new Player(
                         response.getIgn(),
                         response.getUuid(),
@@ -90,8 +105,7 @@ public class PlayerHandler {
                         response.getGeneralInfo().getRank()
                 );
 
-                Document document = PlayerSerializer.INSTANCE.toDocument(player);
-                WoolData.MONGO_HANDLER.updateOrInsertDocument("player_data", "uuid", String.valueOf(player.getUuid()), document);
+                savePlayer(player);
                 future.complete(player);
             }).exceptionally(e -> {
                 e.printStackTrace();
@@ -101,8 +115,10 @@ public class PlayerHandler {
         return future;
     }
 
+    private static final long WEEKLY_QUEST_CHANGE = 1677110400000L;
+
     private static long calculatePlaytime(PlayerReply hypixelReply, PlayerResponse response) {
-        int dailyWins = 0, weeklyShears = 0, weeklyPlay = 0;
+        int dailyWins = 0, weeklyShears = 0, weeklyShearsPost = 0, weeklyPlay = 0;
 
         if (hypixelReply.getPlayer().hasProperty("quests")) {
             JsonObject quests = hypixelReply.getPlayer().getObjectProperty("quests");
@@ -117,7 +133,15 @@ public class PlayerHandler {
             if (quests.has("wool_wars_weekly_shears")) {
                 JsonObject jsonObject = quests.getAsJsonObject("wool_wars_weekly_shears");
                 if (jsonObject.has("completions")) {
-                    weeklyShears = jsonObject.getAsJsonArray("completions").size();
+                    JsonArray jsonElements = jsonObject.getAsJsonArray("completions");
+                    for (JsonElement jsonElement : jsonElements) {
+                        JsonObject object = jsonElement.getAsJsonObject();
+                        if (object.get("time").getAsLong() > WEEKLY_QUEST_CHANGE) {
+                            weeklyShearsPost++;
+                        } else {
+                            weeklyShears++;
+                        }
+                    }
                 }
             }
 
@@ -129,7 +153,7 @@ public class PlayerHandler {
             }
         }
 
-        double questXP = (dailyWins * 400) + (weeklyPlay * 3000) + (weeklyShears * 300);
+        double questXP = (dailyWins * 400) + (weeklyPlay * 3000) + (weeklyShears * 300) + (weeklyShearsPost * 3000);
         double exp = response.getGeneralInfo().getExperience();
         long wins = response.getStatistics(StatisticCategory.OVERALL).getStat(StatisticType.WINS).getValue().longValue();
         double trueExp = exp - (25 * wins) - questXP;

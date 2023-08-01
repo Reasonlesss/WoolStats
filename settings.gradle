@@ -3,3 +3,6 @@ include 'api'
 include 'woolwarsapi'
 include 'common'
 include 'database'
+include 'embed'
+include 'bot'
+
