@@ -12,6 +12,14 @@ The following is required to run the bot.
 - Hypixel API Key
 - MongoDB
 
+## Credits
+
+- [`Hypixel API`](https://api.hypixel.net/) - Providing the statistics
+- [`woolwars.net`](https://woolwars.net/) - Providing more statistics the Hypixel API doesn't
+- [`Crafthead`](https://crafthead.net) - Player Heads
+- [`PlayerDB`](https://playerdb.co/) - Minecraft Account Lookup
+- [`RedVortex`](https://github.com/RedVortexDev) - Minecraft Font
+
 ## Showcase
 Here is a showcase of a few of the embeds the bot can generate.
 <img src="https://github.com/Reasonlesss/WoolStats/blob/main/.github/showcase/showcase1.png?raw=true" />
