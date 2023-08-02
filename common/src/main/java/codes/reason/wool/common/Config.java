@@ -23,6 +23,8 @@ public class Config {
                 FileOutputStream outputStream = new FileOutputStream(file);
                 outputStream.write(stream.readAllBytes());
                 outputStream.close();
+                System.out.println("Please configure the application in the config.properties file.");
+                System.exit(0);
             }
             PROPERTIES.load(new FileInputStream("config.properties"));
         } catch (Exception e) {
