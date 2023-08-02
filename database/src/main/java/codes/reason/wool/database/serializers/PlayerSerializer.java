@@ -2,6 +2,7 @@ package codes.reason.wool.database.serializers;
 
 import codes.reason.wool.common.TextColor;
 import codes.reason.wool.database.player.Player;
+import codes.reason.wool.common.PrestigeIcon;
 import codes.reason.wool.database.player.RankData;
 import org.bson.Document;
 
@@ -35,8 +36,8 @@ public class PlayerSerializer implements Serializer<Player> {
                     document.getInteger("highestWinstreak"),
                     document.getLong("lastUpdated"),
                     LayoutSerializer.INSTANCE.fromDocument(document.get("layouts", Document.class)),
-                    document.getLong("experience_rank")
-            );
+                    document.getLong("experience_rank"),
+                    PrestigeIcon.valueOf(document.getString("icon")));
         }catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -65,6 +66,7 @@ public class PlayerSerializer implements Serializer<Player> {
                 .append("lastUpdated", System.currentTimeMillis())
                 .append("layouts", LayoutSerializer.INSTANCE.toDocument(value.getLayouts()))
                 .append("experience_rank", value.getRank())
+                .append("icon", value.getIcon().toString())
                 ;
     }
 }

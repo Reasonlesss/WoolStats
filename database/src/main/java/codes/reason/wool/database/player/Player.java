@@ -2,6 +2,7 @@ package codes.reason.wool.database.player;
 
 import codes.reason.wool.api.statistics.StatisticCategory;
 import codes.reason.wool.api.statistics.Statistics;
+import codes.reason.wool.common.PrestigeIcon;
 
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,7 @@ public class Player {
     private final long wool;
     private final int layers;
 
+    private final PrestigeIcon icon;
     private final RankData rankData;
     private final Map<StatisticCategory, Statistics> stats;
     private final Map<StatisticCategory, List<String>> layouts;
@@ -32,7 +34,7 @@ public class Player {
 
     public Player(String username, UUID uuid, int star, double networkLevel, double experience, long playtime, long wool,
                   int layers, RankData rankData, Map<StatisticCategory, Statistics> playerStats, int winstreak,
-                  int maxWinstreak, long cacheTime, Map<StatisticCategory, List<String>> layouts, long rank) {
+                  int maxWinstreak, long cacheTime, Map<StatisticCategory, List<String>> layouts, long rank, PrestigeIcon icon) {
         this.username = username;
         this.uuid = uuid;
         this.star = star;
@@ -48,6 +50,7 @@ public class Player {
         this.cacheTime = cacheTime;
         this.layouts = layouts;
         this.rank = rank;
+        this.icon = icon;
     }
 
     public String getUsername() {
@@ -80,6 +83,10 @@ public class Player {
 
     public RankData getRankData() {
         return rankData;
+    }
+
+    public PrestigeIcon getIcon() {
+        return icon;
     }
 
     public Map<StatisticCategory, Statistics> getStats() {

@@ -5,6 +5,7 @@ import codes.reason.wool.api.response.PlayerResponse;
 import codes.reason.wool.api.statistics.StatisticCategory;
 import codes.reason.wool.api.statistics.StatisticType;
 import codes.reason.wool.common.Common;
+import codes.reason.wool.common.PrestigeIcon;
 import codes.reason.wool.common.TextColor;
 import codes.reason.wool.common.WebUtil;
 import codes.reason.wool.database.WoolData;
@@ -102,8 +103,8 @@ public class PlayerHandler {
                         response.getGeneralInfo().getHighestWinstreak(),
                         System.currentTimeMillis(),
                         getLayouts(hypixelReply),
-                        response.getGeneralInfo().getRank()
-                );
+                        response.getGeneralInfo().getRank(),
+                        getPrestigeIcon(hypixelReply));
 
                 savePlayer(player);
                 future.complete(player);
@@ -116,6 +117,24 @@ public class PlayerHandler {
     }
 
     private static final long WEEKLY_QUEST_CHANGE = 1677110400000L;
+
+    private static PrestigeIcon getPrestigeIcon(PlayerReply hypixelReply) {
+        PlayerReply.Player player = hypixelReply.getPlayer();
+        if (player.hasProperty("stats")) {
+            JsonObject stats = player.getObjectProperty("stats");
+            if (stats.has("WoolGames")) {
+                JsonObject woolGames = stats.getAsJsonObject("WoolGames");
+                if (woolGames.has("wool_wars_prestige_icon")) {
+                    try {
+                        return PrestigeIcon.valueOf(woolGames.get("wool_wars_prestige_icon").getAsString());
+                    } catch (IllegalArgumentException e) {
+                        return PrestigeIcon.NONE;
+                    }
+                }
+            }
+        }
+        return PrestigeIcon.NONE;
+    }
 
     private static long calculatePlaytime(PlayerReply hypixelReply, PlayerResponse response) {
         int dailyWins = 0, weeklyShears = 0, weeklyShearsPost = 0, weeklyPlay = 0;

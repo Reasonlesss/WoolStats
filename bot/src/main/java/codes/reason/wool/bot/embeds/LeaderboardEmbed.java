@@ -21,13 +21,13 @@ public class LeaderboardEmbed extends Embed {
 
         Leaderboard expLb = response.getGeneralLeaderboards().getExperience();
 
-        for (int i = 0; i < 8; i++) {
-            Leaderboard.LeaderboardEntry entry = expLb.getEntry(i);
-            tableComponent.addRow(
-                    new ImageComponent(SkinHelper.getFaceURL(entry.getUuid())),
-                    entry.getIgn(),
-                    new StarComponent(StatUtil.getStar(entry.getValue().intValue()), false));
-        }
+//        for (int i = 0; i < 8; i++) {
+//            Leaderboard.LeaderboardEntry entry = expLb.getEntry(i);
+//            tableComponent.addRow(
+//                    new ImageComponent(SkinHelper.getFaceURL(entry.getUuid())),
+//                    entry.getIgn(),
+//                    new StarComponent(StatUtil.getStar(entry.getValue().intValue()), false));
+//        }
 
         this.add(tableComponent);
     }

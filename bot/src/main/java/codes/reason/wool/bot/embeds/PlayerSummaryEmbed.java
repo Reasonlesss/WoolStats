@@ -63,7 +63,7 @@ public class PlayerSummaryEmbed extends Embed {
 
         Component scoreboard = new GroupComponent(0, 0, 0, 0)
                 .add(
-                        new StarComponent(stars),
+                        new StarComponent(stars, player.getIcon()),
                         new GroupComponent(0, 10, 6, 12)
                                 .add(
                                         new TextComponent(

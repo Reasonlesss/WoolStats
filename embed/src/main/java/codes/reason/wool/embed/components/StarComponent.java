@@ -1,5 +1,6 @@
 package codes.reason.wool.embed.components;
 
+import codes.reason.wool.common.PrestigeIcon;
 import codes.reason.wool.common.TextColor;
 import codes.reason.wool.embed.Component;
 import codes.reason.wool.embed.ImageHelper;
@@ -46,15 +47,17 @@ public class StarComponent implements Component {
 
     private static final Font FONT = MinecraftFont.MEDIUM;
     private final int level;
+    private final PrestigeIcon icon;
     private final boolean prefixShown;
 
-    public StarComponent(int level, boolean prefixShown) {
+    public StarComponent(int level, PrestigeIcon icon, boolean prefixShown) {
         this.level = level;
+        this.icon = icon;
         this.prefixShown = prefixShown;
     }
 
-    public StarComponent(int level) {
-        this(level, true);
+    public StarComponent(int level, PrestigeIcon icon) {
+        this(level, icon, true);
     }
 
     @Override
@@ -82,17 +85,7 @@ public class StarComponent implements Component {
         }
 
         g2d.setColor(prestigeColor.getColor());
-        g2d.drawString("[" + level, x, y);
-        x += metrics.stringWidth("[" + level) + 1;
-
-        // Draw the colored star separately
-        g2d.drawImage(STAR, x, y - 13, null);
-        g2d.setComposite(AlphaComposite.SrcAtop);
-        g2d.fillRect(x, y - 13, x + 15, y);
-        g2d.setComposite(AlphaComposite.Src);
-
-        x += 17;
-        g2d.drawString("]", x, y);
+        g2d.drawString("[" + level + icon.getIcon() + "]", x, y);
 
         g2d.dispose();
 
