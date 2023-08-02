@@ -1,5 +1,6 @@
 package codes.reason.wool.bot;
 
+import codes.reason.wool.common.Config;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 
@@ -27,7 +28,7 @@ public class Main {
 //        if (true) return;
 
         try {
-            JDA jda = JDABuilder.createLight(System.getenv("BOT_TOKEN"))
+            JDA jda = JDABuilder.createLight(Config.getString("BOT_TOKEN"))
                     .build();
 
             new WoolStats(jda);
