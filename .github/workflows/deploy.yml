@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - fix/actions
 
 jobs:
   build:
@@ -14,7 +15,7 @@ jobs:
 
       - name: Get sha short
         id: vars
-        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
       - name: Set up JDK 17
         uses: actions/setup-java@v1
@@ -24,16 +25,16 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
 
-      - name: Upload To Pterodactyl
+      - name: Upload to Panel
         uses: rexlmanu/pterodactyl-upload-action@v1
         with:
-          source: ./bot/build/libs/WoolStats.jar
-          target: .
           panel-host: ${{ secrets.PANEL_URL }}
-          server-id: ${{ secrets.SERVER_ID }}
           api-key: ${{ secrets.API_KEY }}
+          server-id: ${{ secrets.SERVER_ID }}
+          source: "./bot/build/libs/WoolStats.jar"
+          target: "./"
 
-      - name: Restart Server
+      - name: Restart Bot
         uses: outsparkled/pterodactyl-power-action@v0.1.0
         with:
           panel-url: ${{ secrets.PANEL_URL }}
