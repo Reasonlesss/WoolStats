@@ -33,7 +33,7 @@ jobs:
           server-id: ${{ secrets.SERVER_ID }}
           api-key: ${{ secrets.API_KEY }}
 
-      - name: Restart Server
+      - name: Restart Bot
         uses: outsparkled/pterodactyl-power-action@v0.1.0
         with:
           panel-url: ${{ secrets.PANEL_URL }}
