@@ -1,5 +1,6 @@
 package codes.reason.wool.database;
 
+import codes.reason.wool.common.Config;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoCredential;
@@ -9,22 +10,24 @@ import com.mongodb.client.MongoDatabase;
 
 public class MongoHandler {
 
+    //
+
 
     private final MongoClient client;
 
     private final String database;
 
     public MongoHandler() {
-        this.database = System.getenv("MONGO_DATABASE");
+        this.database = Config.getString("MONGO_DATABASE");
 
         MongoClientSettings.Builder settings = MongoClientSettings.builder()
-                .applyConnectionString(new ConnectionString(System.getenv("MONGO_URL")));
+                .applyConnectionString(new ConnectionString(Config.getString("MONGO_URL")));
 
-        if (System.getenv("DEV") == null) {
+        if (Config.getString("MONGO_USERNAME") == null) {
             MongoCredential credential = MongoCredential.createCredential(
-                    System.getenv("MONGO_USERNAME"),
+                    Config.getString("MONGO_USERNAME"),
                     this.database,
-                    System.getenv("MONGO_PASSWORD").toCharArray());
+                    Config.getString("MONGO_PASSWORD").toCharArray());
 
             settings.credential(credential);
         }

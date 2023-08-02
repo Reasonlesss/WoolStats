@@ -7,6 +7,7 @@ import codes.reason.wool.bot.command.impl.LeaderboardCommand;
 import codes.reason.wool.bot.command.impl.StatsCommand;
 import codes.reason.wool.bot.listener.CommandListener;
 import codes.reason.wool.bot.listener.SelectMenuListener;
+import codes.reason.wool.common.Config;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Activity;
 
@@ -15,10 +16,9 @@ import net.dv8tion.jda.api.entities.Activity;
  * WoolStats is a stat checker for Hypixel's WoolWars
  *
  * APIs Used:
- *  - Hypixel Public API
- *  - woolwars.net
- *  - playerdb for Username -> UUID and UUID -> Username queries
- *  - crafatar for player heads
+ *  - Hypixel Public API and woolwars.net for statistics
+ *  - playerdb for Username-UUID queries
+ *  - crafthead.net for Player Heads
  */
 public class WoolStats {
 
@@ -30,7 +30,7 @@ public class WoolStats {
 
     private final JDA jda;
 
-    public static final boolean DEVELOPER_MODE = System.getenv("DEV") != null;
+    public static final boolean DEVELOPER_MODE = Config.getBoolean("DEV");
 
     public WoolStats(JDA jda) {
         INSTANCE = this;
