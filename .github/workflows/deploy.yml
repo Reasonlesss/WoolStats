@@ -1,0 +1,42 @@
+name: Build & Deploy Application
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Get sha short
+        id: vars
+        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v1
+        with:
+          java-version: 17
+
+      - name: Build with Gradle
+        run: ./gradlew build
+
+      - name: Deploy To Pterodactyl
+        uses: Itzbenz/deploy-to-pterodactyl@v0.1
+        with:
+          source: ./bot/build/libs/WoolStats.jar
+          target: .
+          panel-url: ${{ secrets.PANEL_URL }}
+          server-id: ${{ secrets.SERVER_ID }}
+          api-key: ${{ secrets.API_KEY }}
+          restart: true
+          force-restart: true
+
+      - name: Webhook to Inform Changes
+        uses: tsickert/discord-webhook@v4.0.0
+        with:
+          webhook-url: ${{ secrets.WEBHOOK_URL }}
+          content: "`${{ steps.vars.outputs.sha_short }}` - ${{ github.event.head_commit.message }}"
