@@ -31,7 +31,7 @@ jobs:
           ftp-server: ${{ secrets.FTP_SERVER }}
           ftp-username: ${{ secrets.FTP_USERNAME }}
           ftp-password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./bot/build/libs/WoolStats.jar
+          local-dir: ./bot/build/libs
 
       - name: Restart Bot
         uses: outsparkled/pterodactyl-power-action@v0.1.0
