@@ -22,9 +22,9 @@ public class PlayerSummaryEmbed extends Embed {
 
     public PlayerSummaryEmbed(Player player) {
 
-        int stars = player.getStar();
         double experience = player.getExperience();
 
+        int stars = StatUtil.getStar(experience);
         double required = StatUtil.getRequired(stars);
         double progress = StatUtil.getProgress(stars, (int) experience);
 
@@ -59,15 +59,12 @@ public class PlayerSummaryEmbed extends Embed {
 
                         new TextComponent(MinecraftFont.SMALL, new TextPart("Games Played", TextColor.GRAY)),
                         new TextComponent(MinecraftFont.MEDIUM, new TextPart(NumberFormatter.shortenNumber(played), TextColor.YELLOW))
-
-
-
                 );
 
         Component scoreboard = new GroupComponent(0, 0, 0, 0)
                 .add(
                         new StarComponent(stars),
-                        new GroupComponent(8, 10, 6, 12)
+                        new GroupComponent(0, 10, 6, 12)
                                 .add(
                                         new TextComponent(
                                                 MinecraftFont.MEDIUM,

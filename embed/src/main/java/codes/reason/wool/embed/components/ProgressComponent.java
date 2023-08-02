@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 
 public class ProgressComponent implements Component {
 
+    private static final Color LINE = new Color(0x505050);
     private static final Color BACKGROUND = new Color(0x282828);
 
     private final int width;
@@ -23,18 +24,21 @@ public class ProgressComponent implements Component {
 
     @Override
     public BufferedImage render() {
-        final BufferedImage image = ImageHelper.createImage(width, 20);
+        final BufferedImage image = ImageHelper.createImage(width, 26);
         Graphics2D g2d = image.createGraphics();
 
         double multi = (double) this.value / (double) this.maxValue;
-        int progress = (int) (width * multi);
+        int progress = (int) ((width - 6) * multi);
 
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
+        g2d.setColor(LINE);
+        g2d.drawRect(0, 5, width - 1, 20);
+
         g2d.setColor(BACKGROUND);
-        g2d.fillRoundRect(0, 2, width, 16, 16, 16);
+        g2d.fillRect(3, 8, width - 6, 15);
         g2d.setColor(TextColor.AQUA.getColor());
-        g2d.fillRoundRect(0, 2, progress, 16, 16, 16);
+        g2d.fillRect(3, 8, progress, 15);
 
         g2d.dispose();
         return image;

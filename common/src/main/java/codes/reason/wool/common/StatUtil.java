@@ -21,9 +21,9 @@ public class StatUtil {
         };
     }
 
-    public static int getStar(int experience) {
-        int prestige = experience / 485000;
-        int remain = experience % 485000;
+    public static int getStar(double experience) {
+        int prestige = (int) (experience / 490000d);
+        int remain = (int) (experience % 490000d);
 
         int level;
 
