@@ -34,6 +34,7 @@ jobs:
           protocol: ftps
           port: 2053
           local-dir: ./bot/build/libs/
+          dry-run: true
 
       - name: Restart Bot
         uses: outsparkled/pterodactyl-power-action@v0.1.0
