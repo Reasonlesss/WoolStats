@@ -10,6 +10,7 @@ import codes.reason.wool.embed.components.GroupComponent;
 import codes.reason.wool.embed.components.LineGraphComponent;
 import codes.reason.wool.embed.components.TableComponent;
 import codes.reason.wool.embed.components.TextComponent;
+import codes.reason.wool.embed.components.VerticalSpacerComponent;
 import codes.reason.wool.embed.text.MinecraftFont;
 import codes.reason.wool.embed.text.TextPart;
 
@@ -31,13 +32,15 @@ public class BotStatsEmbed extends Embed {
 
         // Normal Statistics
         this.add(new GroupComponent(0, 0, 0, 0, 120)
-                .add(new TextComponent(MinecraftFont.SMALL, new TextPart("Guilds", TextColor.GRAY)))
-                .add(new TextComponent(MinecraftFont.MEDIUM, new TextPart(NumberFormatter.formatNumber(WoolStats.INSTANCE.getGuilds()), TextColor.GREEN)))
+                .add(
+                        new TextComponent(MinecraftFont.SMALL, new TextPart("Guilds", TextColor.GRAY)),
+                        new TextComponent(MinecraftFont.MEDIUM, new TextPart(NumberFormatter.formatNumber(WoolStats.INSTANCE.getGuilds()), TextColor.GREEN)),
+                        new VerticalSpacerComponent(),
 
-                .add(new TextComponent(MinecraftFont.SMALL, new TextPart("Commands Ran", TextColor.GRAY)))
-                .add(new TextComponent(MinecraftFont.MEDIUM, new TextPart(NumberFormatter.shortenNumber(commandStats.total()), TextColor.GOLD)))
-
-                .add(tableComponent)
+                        new TextComponent(MinecraftFont.SMALL, new TextPart("Commands Ran", TextColor.GRAY)),
+                        new TextComponent(MinecraftFont.MEDIUM, new TextPart(NumberFormatter.shortenNumber(commandStats.total()), TextColor.GOLD)),
+                        tableComponent
+                )
         );
 
         // Graphs
@@ -58,6 +61,7 @@ public class BotStatsEmbed extends Embed {
                 .add(
                         new TextComponent(MinecraftFont.SMALL, new TextPart("Guilds Over Time", TextColor.GRAY)),
                         guilds,
+
                         new TextComponent(MinecraftFont.SMALL, new TextPart("Commands Over Time", TextColor.GRAY)),
                         commands
                 ));

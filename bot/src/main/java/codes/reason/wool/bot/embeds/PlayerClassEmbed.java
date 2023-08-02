@@ -13,6 +13,7 @@ import codes.reason.wool.embed.components.GroupComponent;
 import codes.reason.wool.embed.components.HotbarComponent;
 import codes.reason.wool.embed.components.TableComponent;
 import codes.reason.wool.embed.components.TextComponent;
+import codes.reason.wool.embed.components.VerticalSpacerComponent;
 import codes.reason.wool.embed.text.MinecraftFont;
 import codes.reason.wool.embed.text.TextPart;
 
@@ -40,6 +41,8 @@ public class PlayerClassEmbed extends Embed {
         this.add(new GroupComponent(0, 0, 0, 2, 130).add(
                 new TextComponent(MinecraftFont.SMALL, new TextPart("Class K/D", TextColor.GRAY)),
                 new TextComponent(MinecraftFont.MEDIUM, new TextPart(String.valueOf(roundedKdr), TextColor.GREEN)),
+                new VerticalSpacerComponent(),
+
                 new TextComponent(MinecraftFont.SMALL, new TextPart("Class K+A/D", TextColor.GRAY)),
                 new TextComponent(MinecraftFont.MEDIUM, new TextPart(String.valueOf(roundedKadr), TextColor.GREEN)),
                 table

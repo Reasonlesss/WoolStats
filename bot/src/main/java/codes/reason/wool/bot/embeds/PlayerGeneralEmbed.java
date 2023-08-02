@@ -9,6 +9,7 @@ import codes.reason.wool.database.player.Player;
 import codes.reason.wool.embed.Embed;
 import codes.reason.wool.embed.components.TableComponent;
 import codes.reason.wool.embed.components.TextComponent;
+import codes.reason.wool.embed.components.VerticalSpacerComponent;
 import codes.reason.wool.embed.text.MinecraftFont;
 import codes.reason.wool.embed.text.TextPart;
 
@@ -29,21 +30,24 @@ public class PlayerGeneralEmbed extends Embed {
                     new TextPart(NumberFormatter.formatNumber(player.getMaxWinstreak()), TextColor.AQUA)
                 )
         );
+        this.add(new VerticalSpacerComponent());
 
         this.add(new TextComponent(MinecraftFont.SMALL, new TextPart("W/L Ratio", TextColor.GRAY)));
         double roundedWlr = (double) Math.round(stats.getStat(StatisticType.WLR).getValue().doubleValue() * 100) / 100;
         this.add(new TextComponent(MinecraftFont.MEDIUM, new TextPart(String.valueOf(roundedWlr), TextColor.GREEN)));
+        this.add(new VerticalSpacerComponent());
 
         this.add(new TextComponent(MinecraftFont.SMALL, new TextPart("K/D Ratio", TextColor.GRAY)));
         double roundedKdr = (double) Math.round(stats.getStat(StatisticType.KDR).getValue().doubleValue() * 100) / 100;
         this.add(new TextComponent(MinecraftFont.MEDIUM, new TextPart(String.valueOf(roundedKdr), TextColor.GREEN)));
+        this.add(new VerticalSpacerComponent());
 
         double kdar = (stats.getStat(StatisticType.KILLS).getValue().doubleValue() + stats.getStat(StatisticType.ASSISTS).getValue().doubleValue())
                         / stats.getStat(StatisticType.DEATHS).getValue().doubleValue();
         double roundedKadr = (double) Math.round(kdar * 100) / 100;
         this.add(new TextComponent(MinecraftFont.SMALL, new TextPart("K+A/D Ratio", TextColor.GRAY)));
         this.add(new TextComponent(MinecraftFont.MEDIUM, new TextPart(String.valueOf(roundedKadr), TextColor.GREEN)));
-
+        this.add(new VerticalSpacerComponent());
 
         TableComponent table = new TableComponent("Stat", "Amount", "LB #");
         addStatsToTable(table, "Wins", stats.getStat(StatisticType.WINS));
