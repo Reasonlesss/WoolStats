@@ -24,16 +24,22 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
 
-      - name: Deploy To Pterodactyl
-        uses: Itzbenz/deploy-to-pterodactyl@v0.1
+      - name: Upload To Pterodactyl
+        uses: rexlmanu/pterodactyl-upload-action@v1
         with:
           source: ./bot/build/libs/WoolStats.jar
           target: .
-          panel-url: ${{ secrets.PANEL_URL }}
+          panel-host: ${{ secrets.PANEL_URL }}
           server-id: ${{ secrets.SERVER_ID }}
           api-key: ${{ secrets.API_KEY }}
-          restart: true
-          force-restart: true
+
+      - name: Restart Server
+        uses: outsparkled/pterodactyl-power-action@v0.1.0
+        with:
+          panel-url: ${{ secrets.PANEL_URL }}
+          server-id: ${{ secrets.SERVER_ID }}
+          bearer-token: ${{ secrets.API_KEY }}
+          power-action: restart
 
       - name: Webhook to Inform Changes
         uses: tsickert/discord-webhook@v4.0.0
