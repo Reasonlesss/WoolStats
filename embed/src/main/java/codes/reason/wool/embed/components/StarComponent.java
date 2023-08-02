@@ -18,7 +18,16 @@ import java.util.List;
 public class StarComponent implements Component {
 
     public static List<TextColor> PRESTIGES = List.of(
-            TextColor.GRAY, TextColor.WHITE, TextColor.RED, TextColor.GOLD
+            TextColor.GRAY,
+            TextColor.WHITE,
+            TextColor.RED,
+            TextColor.GOLD,
+            TextColor.YELLOW,
+            TextColor.GREEN,
+            TextColor.DARK_AQUA,
+            TextColor.DARK_PURPLE,
+            TextColor.LIGHT_PURPLE
+            // i cba to do the rest
     );
 
 
