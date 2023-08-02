@@ -25,6 +25,14 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
 
+      - name: Deploy via FTP
+        uses: SamKirkland/FTP-Deploy-Action@3.1.1
+        with:
+          ftp-server: ${{ secrets.FTP_SERVER }}
+          ftp-username: ${{ secrets.FTP_USERNAME }}
+          ftp-password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./bot/build/libs/WoolStats.jar
+
       - name: Restart Bot
         uses: outsparkled/pterodactyl-power-action@v0.1.0
         with:
