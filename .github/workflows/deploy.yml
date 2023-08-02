@@ -25,16 +25,14 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
 
-      - name: Deploy via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      - name: Upload to Panel
+        uses: rexlmanu/pterodactyl-upload-action@v1
         with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftps
-          port: 2053
-          local-dir: ./bot/build/libs/
-          dry-run: true
+          panel-host: ${{ secrets.PANEL_URL }}
+          api-key: ${{ secrets.API_KEY }}
+          server-id: ${{ secrets.SERVER_ID }}
+          source: "./bot/build/libs/WoolStats.jar"
+          target: "./"
 
       - name: Restart Bot
         uses: outsparkled/pterodactyl-power-action@v0.1.0
