@@ -85,11 +85,13 @@ public class StarComponent implements Component {
         }
 
         g2d.setColor(prestigeColor.getColor());
-        g2d.drawString("[" + level + icon.getIcon() + "]", x, y);
+        String starPrefix = "[" + level + icon.getIcon() + "]";
+        g2d.drawString(starPrefix, x, y);
+        x += metrics.stringWidth(starPrefix);
 
         g2d.dispose();
 
-        return bufferedImage.getSubimage(0, 0, x + metrics.stringWidth("]"), height - 1);
+        return bufferedImage.getSubimage(0, 0, x, height - 1);
     }
 
 
