@@ -6,6 +6,7 @@ import codes.reason.wool.common.PrestigeIcon;
 import codes.reason.wool.database.player.RankData;
 import org.bson.Document;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class PlayerSerializer implements Serializer<Player> {
@@ -15,6 +16,18 @@ public class PlayerSerializer implements Serializer<Player> {
     @Override
     public Player fromDocument(Document document) {
         Document rankData = document.get("rank", Document.class);
+        PrestigeIcon prestigeIcon;
+        try {
+            String icon = document.getString("icon");
+            if (icon == null) {
+                prestigeIcon = PrestigeIcon.NONE;
+            } else {
+                prestigeIcon = PrestigeIcon.valueOf(icon);
+            }
+        } catch (IllegalArgumentException e) {
+            prestigeIcon = PrestigeIcon.NONE;
+        }
+
         try {
             return new Player(
                     document.getString("username"),
@@ -37,7 +50,7 @@ public class PlayerSerializer implements Serializer<Player> {
                     document.getLong("lastUpdated"),
                     LayoutSerializer.INSTANCE.fromDocument(document.get("layouts", Document.class)),
                     document.getLong("experience_rank"),
-                    PrestigeIcon.valueOf(document.getString("icon")));
+                    prestigeIcon);
         }catch (Exception e) {
             e.printStackTrace();
             return null;
